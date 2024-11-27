@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Chat App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div id="username-container" style="display: block;">
+        <h2>Enter your username</h2>
+        <input id="username" type="text" placeholder="Your username" autocomplete="off">
+        <button onclick="setUsername()">Join Chat</button>
+    </div>
+
+    <div id="chat-room" style="display: none;">
+        <h1>Welcome to the Chat Room</h1>
+        <div id="messages"></div>
+        <input id="message" type="text" placeholder="Type a message..." autocomplete="off">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+
