@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, send, emit
+import subprocess
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -23,6 +24,27 @@ def handle_message(data):
     print(f"Message received from {username}: {msg}")
     emit('message', f"{username}: {msg}", broadcast=True)
 
-if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000)
+def start_serveo():
+    """Start Serveo.net port forwarding and display the public URL."""
+    try:
+        print("Starting Serveo.net tunnel...")
+        process = subprocess.Popen(
+            ["ssh", "-R", "80:localhost:5000", "serveo.net"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        for line in iter(process.stdout.readline, ""):
+            print(line.strip())
+            if "Forwarding HTTP traffic from" in line:
+                print(f"Public URL: {line.split(' ')[-1]}")
+                break
+    except Exception as e:
+        print(f"Error starting Serveo tunnel: {e}")
 
+if __name__ == '__main__':
+    # Start the Serveo port forwarding
+    start_serveo()
+
+    # Run the Flask-SocketIO server
+    socketio.run(app, host='0.0.0.0', port=5000)
